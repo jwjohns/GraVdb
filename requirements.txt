@@ -1,0 +1,11 @@
+numpy
+scipy
+scikit-learn
+networkx
+requests
+# For sparse matrix operations and similarity calculations
+sparse
+# For PDF processing (if needed)
+pdfminer.six
+# For API interactions
+requests 
