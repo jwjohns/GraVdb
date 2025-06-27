@@ -48,17 +48,19 @@ Total Response Time: ~52ms
 ### Core Components
 ```
 pdf-ai/
-├── search/
-│   ├── sparse_search.py      # TF-IDF search engine
-│   └── ollama_search.py      # LLM integration layer
+├── main.py                 # PDF extraction to JSON
+├── build_chunks.py         # Chunks extracted JSON into smaller, processable units
+├── build_embeddings.py     # Generates TF-IDF embeddings from chunks
+├── build_graph.py          # Constructs the knowledge graph from chunks and relationships
+├── serve_hybrid.py         # Core hybrid search service (loads graph, vectorizer, embeddings)
+├── ollama_search.py        # LLM integration layer for enhanced search
 ├── data/                     # Document storage (gitignored)
-├── docs/
-│   ├── search_evaluation_results.md
-│   └── llm_integration_analysis.md
-└── persistence/
-    ├── graph.pkl            # Relationship graph
-    ├── vectorizer.pkl       # TF-IDF vectorizer
-    └── chunk_embeddings_sparse.npz
+│   └── pdf_extracted/        # Extracted JSON and images from PDFs
+└── persistence/              # Generated search artifacts (gitignored)
+    ├── graph.pkl             # Relationship graph
+    ├── vectorizer.pkl        # TF-IDF vectorizer
+    ├── chunk_embeddings_sparse.npz # Sparse TF-IDF matrix
+    └── chunk_ids.json        # Mapping of chunk IDs to embedding indices
 ```
 
 ### Data Flow
@@ -97,15 +99,73 @@ pip install -r requirements.txt
 ```
 
 ### Quick Start
+
+This section guides you through the steps to prepare your data, build the necessary search artifacts, and run the search services.
+
+1.  **Prepare your PDF data:**
+    Place your PDF files (e.g., `Funktionsrahmen-Simos-18.1.pdf`) into the `data/` directory. This directory is designed to hold your raw PDF documents.
+
+2.  **Extract text and images from PDFs:**
+    ```bash
+    python main.py
+    ```
+    This script processes the PDF files found in `data/`. It extracts text content and any embedded images, then saves them as structured JSON files and image files within the `data/pdf_extracted/` directory. Each page of a PDF will typically result in a separate JSON file and associated images.
+
+3.  **Build chunks from extracted data:**
+    ```bash
+    python build_chunks.py
+    ```
+    After extraction, this script reads the JSON files from `data/pdf_extracted/` and breaks down the content into smaller, manageable "chunks." These chunks are designed to be semantically coherent units suitable for indexing and search. The output is a single `all_chunks.json` file in the project root, containing all processed chunks.
+
+4.  **Build embeddings and the knowledge graph:**
+    ```bash
+    python build_embeddings.py
+    python build_graph.py
+    ```
+    These two scripts are crucial for preparing the search infrastructure:
+    - `build_embeddings.py`: Generates TF-IDF (Term Frequency-Inverse Document Frequency) embeddings from the `all_chunks.json`. These embeddings are sparse numerical representations of your text data, enabling efficient similarity calculations. It produces `vectorizer.pkl` (the TF-IDF model) and `chunk_embeddings_sparse.npz` (the sparse matrix of embeddings).
+    - `build_graph.py`: Constructs a knowledge graph based on the relationships identified within your chunks (e.g., connections between technical components, signals, or sections). This graph enhances search by providing context-aware traversal. It generates `graph.pkl`.
+    All these generated files (`vectorizer.pkl`, `chunk_embeddings_sparse.npz`, `chunk_ids.json`, and `graph.pkl`) are stored in the `persistence/` directory. This directory acts as a cache for your search artifacts, allowing the search service to load them quickly without re-processing the entire dataset each time.
+
+5.  **Run the hybrid search service (CLI):**
+    ```bash
+    python serve_hybrid.py
+    ```
+    This command starts the core hybrid search service. It loads the pre-built graph, vectorizer, and embeddings from the `persistence/` directory. Once loaded, it provides a simple command-line interface where you can enter queries. The service will then perform a hybrid search (combining TF-IDF and graph traversal) and display relevant results directly in your terminal.
+
+6.  **Run the LLM-integrated search (requires Ollama):**
+    ```bash
+    python ollama_search.py
+    ```
+    For an enhanced, conversational search experience, you can use this script. It integrates with a local Large Language Model (LLM) via Ollama (e.g., using the `qwen3:4b` model). Ensure Ollama is running and the desired model is pulled. This script provides a conversational interface that leverages the LLM to better understand your natural language queries and generate more comprehensive responses based on the search results.
+
+### Using the POC Shell Script
+For convenience, you can use the `poc.sh` script to run the data preparation and start the hybrid search service in sequence:
+
+```bash
+./poc.sh
+```
+
+Ensure the script has execute permissions (`chmod +x poc.sh`).
+
+### Example Usage (within Python scripts)
+
+You can integrate the search functionality into your own Python applications:
+
 ```python
-from search.sparse_search import perform_search
-from search.ollama_search import perform_llm_search
+from serve_hybrid import hybrid_search
 
-# Basic technical search
-results = perform_search("coolant temperature monitoring")
+# Perform a hybrid search
+results = hybrid_search("coolant temperature monitoring")
 
-# Enhanced context-aware search
-enhanced_results = perform_llm_search("fault diagnosis procedure")
+for r in results:
+    print(f"Chunk ID: {r['chunk_id']}, Score: {r['score']:.3f}")
+    print(f"Text: {r['text']}")
+    print(f"Section: {r['section_id']}")
+    print(f"Related Signals: {r['signal_ids']}")
+    print(f"Related ECO Tables: {r['eco_ids']}")
+    print(f"Image Paths: {r['image_paths']}")
+    print("-" * 20)
 ```
 
 ## Performance Optimization
@@ -127,7 +187,7 @@ enhanced_results = perform_llm_search("fault diagnosis procedure")
 - Advanced query complexity support
 
 ## License
-[License Information]
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## Support
-[Contact Information] 
+For any questions or support, please open an issue on the GitHub repository. 
