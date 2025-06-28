@@ -120,6 +120,16 @@ For the fastest way to get started, use the provided shell script:
 
 This script will automatically perform the data preparation steps and start the hybrid search service. Ensure the script has execute permissions (`chmod +x poc.sh`).
 
+### Hybrid Search Proof-of-Concept
+
+To quickly see the hybrid search in action with pre-defined sample data and queries, run:
+
+```bash
+python hybrid_poc.py
+```
+
+This script demonstrates the core hybrid search functionality, combining semantic search with graph-based contextualization, and prints the results directly to your console. It uses a small, in-memory dataset for rapid execution, with sample data derived from the larger 30,000-page PDF dataset used for testing the system.
+
 ### Detailed Quick Start
 
 If you prefer to run each step manually or understand the process in detail, follow these steps:
