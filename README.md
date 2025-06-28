@@ -3,6 +3,16 @@
 ## Overview
 This project presents an Enterprise Knowledge Graph Search system, an advanced data intelligence solution engineered for diverse enterprise data. It combines sparse TF-IDF search with graph-based relationship mapping and Large Language Model (LLM) integration to deliver high-performance, context-aware search capabilities. This architecture is specifically designed to minimize latency when LLMs query vast enterprise knowledge bases, encompassing structured data, unstructured documents, technical specifications, and operational records.
 
+## Quick Demo
+
+To quickly see the hybrid search in action with pre-defined sample data and queries, run:
+
+```bash
+python hybrid_poc.py
+```
+
+This script demonstrates the core hybrid search functionality, combining semantic search with graph-based contextualization, and prints the results directly to your console. It uses a small, in-memory dataset for rapid execution, with sample data derived from the larger 30,000-page PDF dataset used for testing the system.
+
 ## Core Capabilities
 
 ### High-Performance Search Architecture
@@ -103,11 +113,11 @@ For more in-depth examples of how this system can be applied in various enterpri
 
 ### Prerequisites
 ```bash
-python -m venv venv
+uv venv
 source venv/bin/activate  # Unix/macOS
 # or
 .\venv\Scripts\activate  # Windows
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
 ### Quickest Start
@@ -119,16 +129,6 @@ For the fastest way to get started, use the provided shell script:
 ```
 
 This script will automatically perform the data preparation steps and start the hybrid search service. Ensure the script has execute permissions (`chmod +x poc.sh`).
-
-### Hybrid Search Proof-of-Concept
-
-To quickly see the hybrid search in action with pre-defined sample data and queries, run:
-
-```bash
-python hybrid_poc.py
-```
-
-This script demonstrates the core hybrid search functionality, combining semantic search with graph-based contextualization, and prints the results directly to your console. It uses a small, in-memory dataset for rapid execution, with sample data derived from the larger 30,000-page PDF dataset used for testing the system.
 
 ### Detailed Quick Start
 
