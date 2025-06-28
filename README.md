@@ -1,4 +1,4 @@
-# Enterprise Knowledge Graph Search: Context-Aware Data Intelligence
+# Cognitive Enterprise Search: Hybrid AI Contextual Intelligence
 
 ## Overview
 This project presents an Enterprise Knowledge Graph Search system, an advanced data intelligence solution engineered for diverse enterprise data. It combines sparse TF-IDF search with graph-based relationship mapping and Large Language Model (LLM) integration to deliver high-performance, context-aware search capabilities. This architecture is specifically designed to minimize latency when LLMs query vast enterprise knowledge bases, encompassing structured data, unstructured documents, technical specifications, and operational records.
