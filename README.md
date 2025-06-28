@@ -27,6 +27,12 @@ This project presents an Enterprise Knowledge Graph Search system, an advanced d
 - **LLM Enhancement**: Optional integration with Qwen 3 30B model via Ollama for natural language understanding
 - **Adaptive Results**: Combines statistical relevance with technical context for comprehensive results
 
+## Why This Architecture? Optimizing for LLM Performance
+This system is specifically designed to act as a highly efficient Retrieval Augmented Generation (RAG) component for Large Language Models (LLMs). By precisely identifying and delivering only the most relevant, contextual data from vast enterprise knowledge bases, it significantly reduces the amount of information the LLM needs to process. This targeted retrieval enables:
+- **Reduced Latency**: Faster LLM response times due to smaller, highly relevant input contexts.
+- **Cost Efficiency**: Lower operational costs by minimizing the computational load on LLMs.
+- **Internal Data Processing**: Facilitates the effective use of smaller, more efficient, and often internally deployable LLMs (e.g., Qwen 3 30B, 30A3B), enhancing data privacy and control.
+
 ## Performance Metrics
 
 ### Search Operation Breakdown
@@ -86,6 +92,12 @@ pdf-ai/
 - **API-First Design**: Built for enterprise system integration
 - **Extensible Architecture**: Supports custom plugins and enhancements
 - **LLM Integration**: Ready for advanced natural language processing capabilities
+
+## Detailed Use Cases
+For more in-depth examples of how this system can be applied in various enterprise contexts, please refer to:
+- [Supply Chain Benefits](supply_chain_benefits.md)
+- [Auto Parts Supplier Use Cases](auto_parts_supplier_use_cases.md)
+- [E-commerce & Auto Parts E-commerce Use Cases](ecommerce_auto_parts_use_cases.md)
 
 ## Getting Started
 
