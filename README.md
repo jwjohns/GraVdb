@@ -1,7 +1,7 @@
-# PDF-AI: Enterprise Technical Documentation Intelligence
+# Enterprise Knowledge Graph Search: Context-Aware Data Intelligence
 
 ## Overview
-PDF-AI is an advanced document intelligence system specifically engineered for enterprise-grade technical documentation. By combining sparse TF-IDF search with graph-based relationship mapping and LLM integration, it delivers high-performance, context-aware search capabilities optimized for technical content.
+This project presents an Enterprise Knowledge Graph Search system, an advanced data intelligence solution engineered for diverse enterprise data. It combines sparse TF-IDF search with graph-based relationship mapping and Large Language Model (LLM) integration to deliver high-performance, context-aware search capabilities. This architecture is specifically designed to minimize latency when LLMs query vast enterprise knowledge bases, encompassing structured data, unstructured documents, technical specifications, and operational records.
 
 ## Core Capabilities
 
@@ -98,9 +98,19 @@ source venv/bin/activate  # Unix/macOS
 pip install -r requirements.txt
 ```
 
-### Quick Start
+### Quickest Start
 
-This section guides you through the steps to prepare your data, build the necessary search artifacts, and run the search services.
+For the fastest way to get started, use the provided shell script:
+
+```bash
+./poc.sh
+```
+
+This script will automatically perform the data preparation steps and start the hybrid search service. Ensure the script has execute permissions (`chmod +x poc.sh`).
+
+### Detailed Quick Start
+
+If you prefer to run each step manually or understand the process in detail, follow these steps:
 
 1.  **Prepare your PDF data:**
     Place your PDF files (e.g., `Funktionsrahmen-Simos-18.1.pdf`) into the `data/` directory. This directory is designed to hold your raw PDF documents.
@@ -150,15 +160,17 @@ Ensure the script has execute permissions (`chmod +x poc.sh`).
 
 ### Example Usage (within Python scripts)
 
-You can integrate the search functionality into your own Python applications:
+You can integrate the search functionality into your own Python applications. The `hybrid_search` function is designed to query across various data types once they are processed and integrated into the knowledge graph.
 
 ```python
 from serve_hybrid import hybrid_search
 
-# Perform a hybrid search
-results = hybrid_search("coolant temperature monitoring")
+# Example 1: Searching technical documentation
+# This assumes technical manuals/documents have been processed.
+results_tech = hybrid_search("coolant temperature monitoring system specifications")
 
-for r in results:
+print("--- Technical Documentation Search Results ---")
+for r in results_tech:
     print(f"Chunk ID: {r['chunk_id']}, Score: {r['score']:.3f}")
     print(f"Text: {r['text']}")
     print(f"Section: {r['section_id']}")
@@ -166,6 +178,36 @@ for r in results:
     print(f"Related ECO Tables: {r['eco_ids']}")
     print(f"Image Paths: {r['image_paths']}")
     print("-" * 20)
+
+# Example 2: Searching supply chain data
+# This assumes structured or unstructured supply chain data (e.g., invoices, shipping logs, supplier agreements)
+# has been ingested, chunked, and linked within the knowledge graph.
+results_supply_chain = hybrid_search("find all shipments delayed by more than 3 days in Q1 2025")
+
+print("\n--- Supply Chain Data Search Results ---")
+for r in results_supply_chain:
+    print(f"Chunk ID: {r['chunk_id']}, Score: {r['score']:.3f}")
+    print(f"Text: {r['text']}")
+    # Example of potential supply chain specific metadata fields (adjust based on your data model)
+    print(f"Order ID: {r.get('order_id', 'N/A')}")
+    print(f"Supplier Name: {r.get('supplier_name', 'N/A')}")
+    print(f"Expected Delivery: {r.get('expected_delivery_date', 'N/A')}")
+    print(f"Actual Delivery: {r.get('actual_delivery_date', 'N/A')}")
+    print("-" * 20)
+
+# Example 3: Conceptual search for customer support interactions
+# If customer support transcripts or tickets are processed and integrated:
+# results_customer_support = hybrid_search("common issues with product 'X' reported in last month")
+#
+# print("\n--- Customer Support Data Search Results (Conceptual) ---")
+# for r in results_customer_support:
+#     print(f"Chunk ID: {r['chunk_id']}, Score: {r['score']:.3f}")
+#     print(f"Text: {r['text']}")
+#     # Add relevant metadata fields for customer support data
+#     # print(f"Ticket ID: {r['ticket_id']}")
+#     # print(f"Issue Type: {r['issue_type']}")
+#     # print(f"Resolution: {r['resolution']}")
+#     print("-" * 20)
 ```
 
 ## Performance Optimization
