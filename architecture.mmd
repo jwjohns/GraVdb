@@ -1,0 +1,35 @@
+graph TD
+    A[PDF Files in data/] --> B{main.py: PDF Extraction}
+    B --> C[Extracted JSON/Images in data/pdf_extracted/]
+    C --> D{build_chunks.py: Chunking}
+    D --> E[all_chunks.json]
+    E --> F{build_embeddings.py: TF-IDF Embeddings}
+    E --> G{build_graph.py: Knowledge Graph Construction}
+    F --> H[vectorizer.pkl & chunk_embeddings_sparse.npz in persistence/]
+    G --> I[graph.pkl in persistence/]
+    H & I --> J{serve_hybrid.py: Hybrid Search Service (CLI)}
+    J --> K[Search Results]
+    J --> L{ollama_search.py: LLM-Integrated Search}
+    L --> M[Enhanced Conversational Results]
+
+    subgraph Data Preparation
+        B
+        C
+        D
+        E
+        F
+        G
+    end
+
+    subgraph Search Services
+        J
+        L
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#f9f,stroke:#333,stroke-width:2px
+    style I fill:#f9f,stroke:#333,stroke-width:2px
+    style K fill:#ccf,stroke:#333,stroke-width:2px
+    style M fill:#ccf,stroke:#333,stroke-width:2px
